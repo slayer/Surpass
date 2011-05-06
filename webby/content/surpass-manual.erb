@@ -1,0 +1,203 @@
+---
+title:      Surpass Manual
+author:     Ana Nelson
+created_at: 2009-01-30 13:08:32.468894 +00:00
+layout: book
+filter:
+  - erb
+---
+To compile this documentation requires \LaTeX and the gems Gorgyrella and Webby.
+
+This documentation refers to Surpass version <%= Surpass::VERSION %>.
+
+\chapter{Installation and Hello World} % (fold)
+\label{cha:installation_and_hello_world}
+
+\section{Dependencies} % (fold)
+\label{sec:dependencies}
+
+Surpass only needs basic Ruby. It has been tested using Ruby 1.8.6 and JRuby 1.1.5.
+
+For development, you will want to have access to something that can open Microsoft Excel files. This could be Microsoft Excel, Open Office, Google Docs or even a gmail account.
+
+% section dependencies (end)
+
+\section{Gem Installation}
+
+\begin{verbatim}
+sudo gem install surpass
+\end{verbatim}
+
+\section{Source Installation}
+
+\begin{verbatim}
+bzr branch http://ananelson.com/code/surpass
+cd surpass
+sudo rake gem:install
+\end{verbatim}
+
+\section{Hello World}
+
+Let's do a minimal "Hello World" script. We'll need to take care of any imports, initialize a Workbook object, create a Worksheet within the workbook, then write some text. Here's how.
+
+\subsection{Surpass}
+
+<%= gorgl("content/examples/hello-world.rb")%>
+
+\subsection{Result}
+
+And, here's how it looks.
+
+\includegraphics[width=15cm]{examples/hello-world.png}
+
+% chapter installation_and_hello_world (end)
+
+\chapter{Writing Data} % (fold)
+\label{cha:writing_data}
+
+\section{write} % (fold)
+\label{sec:write}
+
+The basic method for writing data to cells is the worksheet's write method.
+
+<%= gorgl("../lib/surpass/worksheet.rb", "write-method")%>
+
+There are two required arguments, the row and column. These are zero-based indexes for the row and column. To write to the first cell in the spreadsheet, you would pass 0, 0. The next argument is the label, this is the value you want written in the cell. This defaults to an empty string (for no particular reason). You can write nil, a String, a Boolean, a Numeric or a Date format. If you pass an object belonging to an unsupported class, you will get an error message, and in this case you should call some method on your object which will return a String or whatever the appropriate label is. The fourth argument is for style, which should be either nil, true, a hash or an instance of the StyleFormat class. See the chapter on Formatting for more information. The style parameter defaults to nil, which means that the default Excel format will be applied.
+
+\section{Writing Arrays of Data} % (fold)
+\label{sec:writing_arrays_of_data}
+
+Frequently, you may want to write more than one value at a time, and so Surpass has convenience methods which handle arrays for you. In the background, these are just looping over the array and calling write() for each value you pass. There's no magic here and, for now at least, no clever optimization. The available methods are write\_array\_to\_row, write\_array\_to\_column, and write\_arrays. The write\_arrays method expects an array of arrays, the first two expect a single array.
+
+<%= gorgl("../lib/surpass/worksheet.rb", "write-arrays") %>
+
+
+% section writing_arrays_of_data (end)
+
+% section write (end)
+
+\section{Autoformatting} % (fold)
+\label{sec:autoformatting}
+
+Autoformats are number formats which are automatically applied to Dates, Floats and similar classes. To have autoformats applied, then pass true as the style parameter to the write function.
+
+Here is the relevant code from row.rb:
+<%= gorgl("../lib/surpass/row.rb", "autoformats") %>
+
+And here are the default formats being defined in style.rb:
+<%= gorgl("../lib/surpass/style.rb", "autoformats") %>
+
+If you use any of the array-writing methods, then autoformatting will be applied by default. To override this behaviour you can pass your own StyleFormat or nil to use the generic default format.
+
+<%= gorgl("content/examples/autoformat.rb") %>
+
+\includegraphics[width=15cm]{examples/autoformat.png}
+
+% section autoformatting (end)
+
+% chapter writing_data (end)
+
+
+\chapter{Formatting} % (fold)
+\label{cha:formatting}
+
+\section{Reference}
+
+There is a command line tool included with Surpass which provides some useful reference data:
+
+<%= gorgl("content/examples/surpass-info.sh") %>
+\begin{verbatim}
+  <%= IO.popen("cd ..; bash webby/content/examples/surpass-info.sh").read %>
+\end{verbatim}
+
+And since you are running this on the command line, you can save or pipe the output to other commands:
+
+<%= gorgl("content/examples/show-greens.sh") %>
+\begin{verbatim}
+  <%= IO.popen("cd ..; bash webby/content/examples/show-greens.sh").read %>
+\end{verbatim}
+
+\section{StyleFormat Class}
+
+The StyleFormat class is a wrapper for the various types of formatting you can apply to a cell. StyleFormat has attributes:
+
+\begin{itemize}
+  \item number\_format\_string
+  \item font
+  \item alignment
+  \item borders
+  \item pattern
+  \item protection
+\end{itemize}
+
+Each of these attributes (except for number\_format\_string) has a corresponding class, and you can look in lib/surpass/formatting.rb for the source.
+
+There are two basic ways to set formatting options. You can pass a hash with formatting options when you initialize a new StyleFormat instance, or you can set individual attributes of the formatting classes. You can also combine both approaches, initializing with a hash and then modifying attributes.
+
+\section{Number Format Strings} % (fold)
+\label{sec:number_format_strings}
+
+This attribute is a simple string, specifying the numeric/date format to be applied to the value stored in a cell.
+
+\newpage
+
+<%= gorgl("content/examples/number-format-string.rb") %>
+\includegraphics[width=16cm]{examples/number-format-string.png}
+
+% section number_format_strings (end)
+
+
+\subsection{Specifying Colours}
+
+Here is a list of available colours:
+
+\begin{multicols}{3}
+\begin{verbatim}
+<%= Formatting::COLOURS.keys.sort.join("\n") %>
+\end{verbatim}
+\end{multicols}
+
+\includegraphics[width=16cm]{examples/colours.png}
+
+\subsection{Border Formats}
+
+Here is a list of available border line types:
+\begin{verbatim}
+  <%= Borders.line_type_directives.join("\n") %>
+\end{verbatim}
+\includegraphics[width=16cm]{examples/borders.png}
+
+\subsection{Fill Patterns}
+
+Here is a list of available fill patterns:
+\begin{verbatim}
+<%= Pattern.fill_directives.join("\n") %>
+\end{verbatim}
+\includegraphics[width=16cm]{examples/patterns.png}
+
+\subsection{Surpass}
+<%= gorgl("content/examples/formatting.rb")%>
+
+And, here's how it looks.
+
+\includegraphics[width=16cm]{examples/formatting.png}
+
+% chapter formatting (end)
+
+\chapter{Saving} % (fold)
+\label{cha:saving}
+
+Typically, you will call the workbook's save() method to write that workbook to a file. You can pass the filename as an argument to save(), or as an argument to new() when you first instantiate a workbook object.
+
+However, you can also call a workbook's data() method, which gives you direct access to a workbook's binary data. You can write this to a file manually, as in this example:
+
+<%= gorgl("content/examples/data.rb") %>
+
+Or, you could use this data as an argument to Rails' send\_data method.
+
+\chapter{Formulas}
+
+<%= gorgl("content/examples/formulas.rb") %>
+
+\includegraphics[width=16cm]{examples/formulas.png}
+

@@ -1,0 +1,31 @@
+---
+extension: tex
+filter:    erb
+---
+\documentclass{beamer}
+\usetheme{Boadilla}
+
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage[ascii]{inputenc}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{multicol}
+
+<%= pygments_latex_styles('tango') %>
+
+\title{<%= @page.title %>}
+\subtitle{<%= @page.subtitle %>}
+\author{<%= @page.author %>}
+\date[<%= @page.created_at.strftime("%B %Y") %>]{<%= @page.created_at.strftime("%d %b %Y") %>}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+
+<%= @content %>
+
+\end{document}

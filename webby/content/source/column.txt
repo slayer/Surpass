@@ -1,0 +1,8 @@
+---
+title:  column.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/column.rb") %>
+      

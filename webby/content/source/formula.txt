@@ -1,0 +1,8 @@
+---
+title:  formula.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/formula.rb") %>
+      

@@ -1,0 +1,158 @@
+
+InterfaceHeaderRecord
+- should pack correctly
+
+InterfaceEndRecord
+- should pack correctly
+
+MMSRecord
+- should pack correctly
+
+WriteAccessRecord
+- should pack correctly
+
+DSFRecord
+- should pack correctly
+
+TabIDRecord
+- should pack correctly
+
+FnGroupCountRecord
+- should pack correctly
+
+WindowProtectRecord
+- should pack correctly
+
+ObjectProtectRecord
+- should pack correctly
+
+ScenarioProtectRecord
+- should pack correctly
+
+PasswordRecord
+- should pack correctly with blank password
+- should pack correctly with a password of 123456
+- should pack correctly with a password of abcdefghij
+- should pack correctly with a password of ok
+
+Prot4RevRecord
+- should pack correctly
+
+Prot4RevPassRecord
+- should pack correctly
+
+BackupRecord
+- should pack correctly
+
+HideObjRecord
+- should pack correctly
+
+RefreshAllRecord
+- should pack correctly
+
+BookBoolRecord
+- should pack correctly
+
+CountryRecord
+- should pack correctly
+
+UseSelfsRecord
+- should pack correctly
+
+EOFRecord
+- should pack correctly
+
+DateModeRecord
+- should pack correctly when passed true
+- should pack correctly when passed false
+
+PrecisionRecord
+- should pack correctly when passed true
+- should pack correctly when passed false
+
+CodepageBiff8Record
+- should pack correctly
+
+Window1Record
+- should pack correctly
+
+StyleRecord
+- should pack correctly
+
+BoundSheetRecord
+- should pack correctly
+
+DimensionsRecord
+- should pack correctly
+
+ExcelDocument
+- should save
+
+Reader
+- should read in the entire file
+- should correctly parse doc_magic
+- should correctly parse file_uid
+- should correctly parse rev_num
+- should correctly parse ver_num
+- should correctly parse byte_order
+- should correctly parse sector size
+- should correctly parse short sector size
+- should correctly parse total sat sectors
+- should correctly parse dir start sid
+- should correctly parse min stream size
+- should correctly parse ssat start sid
+- should correctly parse total ssat sectors
+- should correctly parse msat start sid
+- should correctly parse total msat sectors
+- should correctly parse the msat
+- should correctly parse the sat
+- should correctly parse the directory list
+
+StyleCollection initialization
+- should properly initialize the fonts hash
+- should property initialize the number_formats hash
+- should properly initialize the styles hash
+- should property initialize a default style
+- should have a valid font_index in the default_format
+- should have a valid number_format_index in the default_format
+- should have a valid alignment in the default_format
+- should have a valid borders in the default_format
+- should have a valid pattern in the default_format
+- should have a valid protection in the default_format
+
+StyleCollection adding new styles
+- should return the default style index when trying to add a nil style
+- should correctly add a new blank style
+- should not re-add an existing number format
+- should add a new number format
+
+StyleCollection biff
+- should correctly convert font data to biff
+- should correctly convert number format data to biff
+- should correctly convert cell styles data to biff
+
+Utilities
+- should round trip pixels to twips
+- should round trip points to pixels
+
+Utilities Excel boolean conversion
+- should convert true values to 1
+- should convert false values to 0
+- should convert 1 to true
+- should convert 0 to false
+- should raise an error with anything else
+
+Utilities Excel date converter
+- should convert objects of class Date
+- should convert objects of class DateTime
+- should convert objects of class Time
+
+Utilities hex function
+- should description
+
+Workbook to_biff
+- should not raise an error
+
+Finished in 0.100042 seconds
+
+80 examples, 0 failures

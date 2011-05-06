@@ -1,0 +1,8 @@
+---
+title:  utilities.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/utilities.rb") %>
+      

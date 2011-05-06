@@ -1,0 +1,324 @@
+---
+title:      ANTLR for Ruby
+subtitle:   Excel Formula Generation
+author:     Ana Nelson
+created_at: 2010-06-15
+layout: beamer
+filter:
+  - erb
+---
+
+\begin{frame}{What is ANTLR?}
+\begin{itemize}
+\item{ANother Tool for Language Recognition}
+\item{Parser Generator}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What would you use it for?}
+\begin{itemize}
+\item{Domain Specific Languages}
+\item{When a regular expression gets too complicated}
+\item{When you need really robust code}
+\item{Learning more about computer science}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ANTLR vs. Ragel}
+\begin{itemize}
+\item{Ragel better for state-machine type uses}
+\item{ANTLR has recursion - VERY powerful, used in Excel formula parser}
+\item{For many tasks, either will work. Get to know them both.}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Language Targets}
+\begin{itemize}
+\item{native Ruby - new target}
+\item{Java - mature, very well tested, the default target for ANTLR. use via JRuby}
+\item{C - for performance/compactness if you don't need JRuby compatibility}
+\item{C Sharp on CLR?}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Native Ruby Target}
+\url{http://ohboyohboyohboy.github.com/antlr3/}
+\end{frame}
+
+\begin{frame}{Surpass}
+\begin{itemize}
+\item{Create Excel spreadsheets using just Ruby - no need to have Microsoft Office or Windows}
+\item{We write the .xls files directly}
+\item{Microsoft file formats are pretty nasty!}
+\item{We need a parser to help with formulas.}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{BIFF}
+\begin{itemize}
+\item{Big Ignorant File Format from microsoft Office}
+\pause
+\item{actually it's Binary Interchange File Format}
+\pause
+\end{itemize}
+
+
+
+\begin{block}{What Microsoft Says}
+An OLE 2 compound file is essentially ``a file system within a file''. The compound file contains a hierarchical system of storages and streams.  A storage is analogous to a directory, and a stream is analogous to a file in a directory.
+\end{block}
+
+\pause
+
+\begin{block}{Joel Spolsky Article}
+``Why are the Microsoft Office file formats so complicated?''
+\url{http://www.joelonsoftware.com/items/2008/02/19.html}
+\end{block}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{BIFF Info}
+
+\begin{itemize}
+\item{Used to be a secret!}
+\item{The book ``Microsoft Excel 97 Developers Kit'' provided documentation for BIFF8.}
+\item{OpenOffice.org provided detailed documentation. \url{http://sc.openoffice.org/excelfileformat.pdf}}
+\item{Since 2008, Microsoft has published the BIFF/OLE2 file format. \url{http://www.microsoft.com/interop/docs/officebinaryformats.mspx}}
+\item{More exhaustive implementation (in Java) \url{http://poi.apache.org/}}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{How to write a formula?}
+\begin{itemize}
+\item{Workbook}
+\item{Worksheet}
+\item{Row}
+\item{Cell}
+\item{Formula}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{BIFF Compound File}
+\includegraphics[width=0.6\linewidth]{compound-file.png}
+\end{frame}
+
+\begin{frame}{BIFF Compound File}
+\includegraphics[width=0.6\linewidth]{compound-file-wb.png}
+\end{frame}
+
+\begin{frame}{BIFF Workbook}
+\includegraphics[width=0.6\linewidth]{biff8-workbooks.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BIFF Workbook}
+\tiny
+<%= gorgl("../lib/surpass/workbook.rb", "to-biff") %>
+\end{frame}
+
+\begin{frame}{BIFF Workbook}
+\includegraphics[width=0.6\linewidth]{biff8-workbooks-bof.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BIFF 8 BOF Record}
+\tiny
+<%= gorgl("../lib/surpass/biff_record.rb", "biffbof-record") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BIFF Record}
+\tiny
+<%= gorgl("../lib/surpass/biff_record.rb", "biff-record") %>
+\end{frame}
+
+\begin{frame}{BIFF Compound File}
+\includegraphics[width=0.6\linewidth]{compound-file-ws.png}
+\end{frame}
+
+\begin{frame}{BIFF Worksheet}
+\includegraphics[width=0.6\linewidth]{biff8-worksheets.png}
+\end{frame}
+
+\begin{frame}{BIFF Worksheet}
+\includegraphics[width=0.6\linewidth]{biff8-worksheets-rows.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BIFF Worksheet}
+\tiny
+<%= gorgl("../lib/surpass/worksheet.rb", "to-biff") %>
+\textcolor{black}{...}
+<%= gorgl("../lib/surpass/worksheet.rb", "to-biff-rows") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BIFF Row}
+\tiny
+<%= gorgl("../lib/surpass/row.rb", "to-biff") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Hello, Formula World!}
+\tiny
+<%= gorgl("hello-world-formula.rb", "1") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formula Class}
+\tiny
+<%= gorgl("../lib/surpass/formula.rb", "1") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing Cells}
+\tiny
+<%= gorgl("../lib/surpass/row.rb", "label-classes") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formula Cell}
+\tiny
+<%= gorgl("../lib/surpass/cell.rb", "formula-cell") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formula Record}
+\tiny
+<%= gorgl("../lib/surpass/biff_record.rb", "formula-record") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\textcolor{black}{The good stuff happens in the parser. Takes a formula string and then determines the native Excel formula for that formula.
+Some examples of formula strings}
+\setbeamercolor{verbatim}{fg=purple} 
+
+\tiny
+\begin{Verbatim}[formatcom=\color{black}]
+-(134.8780789+1)
+-(134.8780789e-10+1)
+-1/(1+1)+9344
+-(1+1)
+-(1+1)/(-2-2)
+A3*B3
+5%
+A4*B4*sin(pi()/4)
+A3>=B3
+C1+C2+C3+C4+C5/(C1+C2+C3+C4/(C1+C2+C3+C4/(C1+C2+C3+C4)+C5)+C5)-20.3e-2
+C1^2
+SUM(C1;C2;;;;;C3;;;C4)
+SUM($A$1:$C$5)
+"lkjljllkllkl"'
+"yuyiyiyiyi"'
+A8&B8&A8'
+A8     & B8 & A8'
+TRUE
+FALSE
+IF(A1>A2;3;"hkjhjkhk")
+pi()
+2*pi()
+sin(0)
+left("abcde", 2)
+hyperlink("http://google.com", "google")
+sin(pi())
+now()
+\end{Verbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Formula Class}
+\tiny
+<%= gorgl("../lib/surpass/formula.rb", "1") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\small
+<%= gorgl("../lib/surpass/ExcelFormula.g", "formula") %>
+\includegraphics[scale=0.5]{formula.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "expr-tokens") %>
+\includegraphics[scale=0.5]{expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec0_expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec0_expr-tokens") %>
+\includegraphics[scale=0.5]{prec0_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec1_expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec1_expr-tokens") %>
+\includegraphics[scale=0.5]{prec1_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec2_expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec2_expr-tokens") %>
+\includegraphics[scale=0.5]{prec2_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec3_expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec3_expr-tokens") %>
+\includegraphics[scale=0.5]{prec3_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec4_expr") %>
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec4_expr-tokens") %>
+\includegraphics[scale=0.5]{prec4_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "prec5_expr") %>
+\includegraphics[scale=0.5]{prec5_expr.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+\includegraphics[scale=0.3]{primary.png}
+\end{frame}
+
+\begin{frame}
+Goal: to get a native representation added to @rpn
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "boolean-string") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "numeric") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "parens") %>
+\end{frame}
+
+\begin{frame}[fragile]
+\tiny
+<%= gorgl("../lib/surpass/ExcelFormula.g", "if-fn") %>
+\end{frame}
+
+

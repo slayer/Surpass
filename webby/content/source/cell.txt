@@ -1,0 +1,8 @@
+---
+title:  cell.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/cell.rb") %>
+      

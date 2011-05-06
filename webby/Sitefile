@@ -1,0 +1,118 @@
+require "gorgyrella"
+require "surpass" # for version number.
+
+require "rubygems"
+begin
+  require "rbosa"
+rescue
+  "You don't have RubyOSA. That's okay but won't be able to automatically activate Excel for screenshots."
+end
+
+desc "render output latex to a PDF"
+task :pdf => [:build] do
+  files = IO.popen("find output/").read
+  files.chomp.each do |f|
+    f = f.rstrip
+    next unless f =~ /\.tex$/
+    dir = File.dirname(f)
+    file = File.basename(f)
+    system("cd #{dir}; pdflatex #{file}")
+    
+    `mv output/surpass-manual.pdf output/#{manual_filename}`
+    `cp output/#{manual_filename} ../..`
+  end
+end
+
+def capture_xls(xls, png)
+  `open #{xls}`
+  sleep 2
+  `screencapture #{png}`
+  `mogrify -crop 840x570+14+54 #{png}`
+end
+
+task :screenshots do
+  # Excel should be already open, and it should be assigned to a 
+  # Space with nothing else in it for nice, tidy screenshots.
+  # Desktop background should be set to plain white, or use Backdrop.app.
+  # Also you should have "When switching to an application, switch to a ..." box checked
+  begin
+    app = OSA.app("Microsoft Excel")
+    app.activate
+  rescue
+    puts "OSA activation of Microsoft Excel didn't work, you'll have to activate it manually."
+  end
+
+  `mkdir -p output/examples`
+
+  # Take screenshots of all Ruby Examples.
+  `ls content/examples/*.rb`.chomp.split("\n").each_with_index do |f, i|
+    puts "processing #{f}..."
+
+    png = f.gsub(/rb$/, "png")
+    xls = f.gsub(/rb$/, "xls")
+
+    `jruby #{f}`
+    capture_xls(xls, png)
+    app.workbooks.each do |w|
+      app.save(w)
+      app.close(w)
+    end
+  end
+
+  # Take screenshots of all Python Examples. (plan is to have joint python/ruby documentation)
+  `ls content/examples/*.py`.chomp.split("\n").each_with_index do |f, i|
+    break # Skip processing Python examples for the moment.
+
+    puts "processing #{f}..."
+
+    png = f.gsub(/\.py$/, "-python.png")
+    xls = f.gsub(/\.py$/, "-python.xls")
+
+    `python #{f}`
+    capture_xls(xls, png)
+  end
+
+  # Return to iTerm
+  begin
+    app = OSA.app("iTerm")
+    app.activate
+  rescue
+  end
+end
+
+task :default => :pdf
+
+task :rsync => [:pdf] do
+  system "rsync -v -r --delete --exclude-from=rsync-exclude output/ ananelson@rubyforge.org:/var/www/gforge-projects/surpass/"
+end
+
+task :generate_source do
+  `rm -r content/source`
+  `mkdir content/source`
+  `ls ../lib/surpass/*.rb`.chomp.split.each do |n|
+    File.open("content/source/#{File.basename(n, '.rb')}.txt", "w") do |f|
+      f.write %{---
+title:  #{File.basename(n)}
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/#{File.basename(n)}") %>
+      }
+    end
+  end
+end
+
+def manual_filename
+  "surpass-manual-#{Surpass::VERSION.gsub(".", "-")}.pdf"
+end
+
+def gzipped_source
+  bzr_version = `bzr revno ..`.strip
+  filename = "surpass-r#{bzr_version}.tgz"
+
+  # Create gzipped file
+  `bzr export output/#{filename} ..`
+
+  filename
+end

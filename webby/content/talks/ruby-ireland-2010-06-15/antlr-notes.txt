@@ -1,0 +1,30 @@
+What is ANTLR?
+Parser Generator
+ANother Tool for Language Recognition
+
+What would you use it for?
+- Domain Specific Languages
+- When a regular expression gets too complicated
+- When you need really robust code
+- Learning more about computer science
+
+vs. Ragel
+- Ragel better for state-machine type uses
+- ANTLR has recursion - *very* powerful and used in Excel parser
+- For many parsing tasks either will work, should try both and see which fits
+
+Targets
+- native Ruby: new target
+- Java: very well tested, the 'default' target for ANTLR, use via JRuby
+- C: For performance/compactness if you don't need JRuby compatibility and you don't mind C
+- C# on CLR maybe?
+
+Native Ruby Target
+http://ohboyohboyohboy.github.com/antlr3/
+
+Surpass
+- Create Excel spreadsheets using just Ruby - no need to have Microsoft Office or Windows
+- We write the .xls files directly
+- Microsoft file formats are pretty nasty!
+- This is why we need a parser!!
+

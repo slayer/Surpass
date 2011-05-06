@@ -1,0 +1,8 @@
+---
+title:  bitmap.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/bitmap.rb") %>
+      

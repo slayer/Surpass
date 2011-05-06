@@ -1,0 +1,8 @@
+---
+title:  document.rb
+layout:  no-sidebar
+filter:
+  - erb
+---
+<%= gorg("../lib/surpass/document.rb") %>
+      

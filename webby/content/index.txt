@@ -1,0 +1,16 @@
+---
+title:  Surpass
+author: Ana Nelson
+layout:  web
+filter:
+  - erb
+  - textile
+---
+
+Homepage of the Surpass project. Surpass is software for creating Excel spreadsheets in pure native Ruby.
+
+h2. Example:
+
+<%= gorgt("content/examples/formatting.rb", "1") %>
+
+<img src="examples/formatting.png" />
